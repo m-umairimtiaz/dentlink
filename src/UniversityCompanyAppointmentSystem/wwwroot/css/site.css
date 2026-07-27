@@ -1,0 +1,157 @@
+/* -----------------------------------------------------------------
+   Simple colour palette for the whole site, as CSS variables so every
+   page stays consistent: dark blue (brand), white, light grey, green (success).
+   ----------------------------------------------------------------- */
+:root {
+    --brand-dark-blue: #0d3b66;
+    --brand-blue-hover: #0a2e50;
+    --brand-light-grey: #f4f6f8;
+    --brand-border-grey: #e1e5ea;
+    --brand-success-green: #2e7d32;
+    --brand-white: #ffffff;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: var(--brand-light-grey);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    margin-bottom: 0;
+}
+
+/* ---------------- Top bar ---------------- */
+.topbar {
+    background-color: var(--brand-dark-blue);
+    color: var(--brand-white);
+}
+
+.topbar .navbar-brand,
+.topbar .nav-link {
+    color: var(--brand-white) !important;
+}
+
+.topbar .nav-link:hover {
+    color: #cfe0f0 !important;
+}
+
+/* ---------------- Sidebar ---------------- */
+.app-layout {
+    display: flex;
+    min-height: calc(100vh - 56px); /* fills the screen below the top bar */
+}
+
+.sidebar {
+    width: 230px;
+    flex-shrink: 0;
+    background-color: var(--brand-white);
+    border-right: 1px solid var(--brand-border-grey);
+}
+
+.sidebar .nav-link {
+    color: #33475b;
+    padding: 0.65rem 1.1rem;
+    border-left: 3px solid transparent;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: var(--brand-light-grey);
+    color: var(--brand-dark-blue);
+    border-left: 3px solid var(--brand-dark-blue);
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 1.5rem;
+}
+
+/* ---------------- Reusable bits ---------------- */
+.stat-card {
+    border: 1px solid var(--brand-border-grey);
+    border-radius: 0.5rem;
+    background-color: var(--brand-white);
+    padding: 1.25rem;
+    height: 100%;
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--brand-dark-blue);
+}
+
+.stat-card .stat-label {
+    color: #66788f;
+    font-size: 0.9rem;
+}
+
+.btn-brand {
+    background-color: var(--brand-dark-blue);
+    border-color: var(--brand-dark-blue);
+    color: var(--brand-white);
+}
+
+.btn-brand:hover {
+    background-color: var(--brand-blue-hover);
+    border-color: var(--brand-blue-hover);
+    color: var(--brand-white);
+}
+
+.btn-success-brand {
+    background-color: var(--brand-success-green);
+    border-color: var(--brand-success-green);
+    color: var(--brand-white);
+}
+
+.badge-pending { background-color: #f9a825; color: #212529; }
+.badge-confirmed { background-color: var(--brand-success-green); color: #fff; }
+.badge-rejected { background-color: #c62828; color: #fff; }
+.badge-cancelled { background-color: #6c757d; color: #fff; }
+.badge-completed { background-color: #1565c0; color: #fff; }
+
+.slot-unavailable {
+    color: #9aa5b1 !important;
+    background-color: #f0f1f3 !important;
+}
+
+.auth-card {
+    max-width: 480px;
+    margin: 3rem auto;
+    background-color: var(--brand-white);
+    border: 1px solid var(--brand-border-grey);
+    border-radius: 0.5rem;
+    padding: 2rem;
+}
+
+/* Home page hero: the DentLink logo sits centered behind the welcome heading as a
+   faint watermark, with the text itself layered on top via position:relative. */
+.dentlink-hero-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    opacity: 0.12;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Only tightens the gap when the "Create an Account" card sits right under the
+   hero (home page) - does not affect the same card used on the Register page. */
+.dentlink-hero + .auth-card {
+    margin-top: 0;
+}
+
+/* Simple full-page loading overlay shown while a form submits (see site.js) */
+#page-loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}

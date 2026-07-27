@@ -1,0 +1,44 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-card">
+    <h3 class="mb-4 text-center">Login</h3>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <form asp-action="Login" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" autofocus />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-brand w-100">Login</button>
+    </form>
+
+    <p class="mt-3 mb-0 text-center">Don't have an account? <a asp-action="Register">Register here</a>.</p>
+
+    <hr />
+    <p class="small text-muted mb-0">
+        Sample logins &mdash; University: <code>admin@ku.edu.kw</code> / <code>University@123</code><br />
+        Company: <code>hr@gulftech.com</code> / <code>Company@123</code>
+    </p>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

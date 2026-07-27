@@ -1,0 +1,15 @@
+@model AppointmentStatus
+@{
+    // Maps each status to the CSS class defined in site.css, so badge colours stay
+    // consistent everywhere the status is shown (dashboards, lists, details page).
+    string cssClass = Model switch
+    {
+        AppointmentStatus.Pending => "badge-pending",
+        AppointmentStatus.Confirmed => "badge-confirmed",
+        AppointmentStatus.Rejected => "badge-rejected",
+        AppointmentStatus.Cancelled => "badge-cancelled",
+        AppointmentStatus.Completed => "badge-completed",
+        _ => "bg-secondary"
+    };
+}
+<span class="badge @cssClass">@Model</span>

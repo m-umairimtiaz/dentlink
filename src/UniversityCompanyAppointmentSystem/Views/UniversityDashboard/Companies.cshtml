@@ -1,0 +1,41 @@
+@model List<CompanySummaryViewModel>
+@{
+    ViewData["Title"] = "Companies";
+}
+
+<h2 class="mb-4">Companies</h2>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Count == 0)
+        {
+            <p class="text-muted p-3 mb-0">No companies have booked an appointment with your university yet.</p>
+        }
+        else
+        {
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Contact Person</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Total Appointments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var company in Model)
+                    {
+                        <tr>
+                            <td>@company.CompanyName</td>
+                            <td>@company.ContactPersonName</td>
+                            <td>@company.Email</td>
+                            <td>@company.PhoneNumber</td>
+                            <td>@company.TotalAppointments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

@@ -1,0 +1,53 @@
+@model AppointmentSlotFormViewModel
+@{
+    ViewData["Title"] = "Edit Appointment Slot";
+}
+
+<h2 class="mb-4">Edit Appointment Slot</h2>
+
+<div class="card" style="max-width:600px">
+    <div class="card-body">
+        <form asp-action="Edit" asp-route-id="@Model.AppointmentSlotId" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="AppointmentSlotId" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="AppointmentDate" class="form-label"></label>
+                <input asp-for="AppointmentDate" class="form-control" />
+                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="StartTime" class="form-label"></label>
+                    <input asp-for="StartTime" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="EndTime" class="form-label"></label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label asp-for="MaximumEmployees" class="form-label"></label>
+                <input asp-for="MaximumEmployees" class="form-control" type="number" min="1" />
+                <span asp-validation-for="MaximumEmployees" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<SlotStatus>()"></select>
+            </div>
+
+            <button type="submit" class="btn btn-brand">Save Changes</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: dentlink
+    runtime: dotnet
+    buildCommand: dotnet publish src/UniversityCompanyAppointmentSystem/UniversityCompanyAppointmentSystem.csproj -c Release -o out
+    startCommand: dotnet out/UniversityCompanyAppointmentSystem.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dentlink-db
+          property: connectionString
+
+databases:
+  - name: dentlink-db
+    databaseName: dentlink
+    plan: free

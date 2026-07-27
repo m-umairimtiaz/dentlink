@@ -1,0 +1,19 @@
+## .NET / Visual Studio
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+.vs/
+*.swp
+
+## Build artifacts
+DentLink-deploy.zip
+
+## Secrets / local overrides
+appsettings.Development.json
+
+## OS
+.DS_Store
+Thumbs.db

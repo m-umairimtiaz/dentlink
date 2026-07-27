@@ -1,0 +1,50 @@
+@model NotificationListViewModel
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Notifications</h2>
+    @if (Model.UnreadCount > 0)
+    {
+        <form asp-action="MarkAllAsRead" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Mark All as Read</button>
+        </form>
+    }
+</div>
+
+<div class="card">
+    <ul class="list-group list-group-flush">
+        @if (Model.Notifications.Count == 0)
+        {
+            <li class="list-group-item text-muted">You have no notifications yet.</li>
+        }
+        else
+        {
+            @foreach (var notification in Model.Notifications)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-start @(notification.IsRead ? "" : "bg-light")">
+                    <div>
+                        <div class="@(notification.IsRead ? "" : "fw-bold")">@notification.Message</div>
+                        <div class="small text-muted">@notification.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        @if (!notification.IsRead)
+                        {
+                            <span class="badge bg-primary">Unread</span>
+                            <form asp-action="MarkAsRead" asp-route-id="@notification.NotificationId" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Mark as Read</button>
+                            </form>
+                        }
+                        @if (notification.AppointmentId != null)
+                        {
+                            <a class="btn btn-sm btn-outline-secondary" asp-controller="Appointments" asp-action="Details" asp-route-id="@notification.AppointmentId">View Appointment</a>
+                        }
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+</div>

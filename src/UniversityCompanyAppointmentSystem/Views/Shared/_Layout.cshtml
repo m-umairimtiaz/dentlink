@@ -1,0 +1,118 @@
+@{
+    // ViewBag.CurrentAccountType is set by CompanyBaseController / UniversityBaseController
+    // (or manually in shared controllers) to "Company", "University", or left null if nobody is logged in.
+    string? accountType = ViewBag.CurrentAccountType as string;
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    int unreadCount = ViewBag.UnreadNotificationCount is int n ? n : 0;
+
+    // Small local helper: returns "active" when the current page belongs to the given controller,
+    // so the matching sidebar link can be highlighted.
+    string ActiveIf(string controllerName) => currentController.Equals(controllerName, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dental Appointment System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Top navigation bar: shown on every page -->
+    <nav class="navbar navbar-expand-sm topbar mb-0">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Dental Appointment System</a>
+
+            @if (accountType != null)
+            {
+                <ul class="navbar-nav flex-row ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <a class="nav-link position-relative" asp-controller="Notifications" asp-action="Index">
+                            Notifications
+                            @if (unreadCount > 0)
+                            {
+                                <span class="badge rounded-pill bg-danger ms-1">@unreadCount</span>
+                            }
+                        </a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <span class="nav-link">@ViewBag.CurrentAccountName (@accountType)</span>
+                    </li>
+                    <li class="nav-item">
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <ul class="navbar-nav flex-row ms-auto">
+                    <li class="nav-item me-2"><a class="btn btn-sm btn-outline-light" asp-controller="Account" asp-action="Login">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-sm btn-light" asp-controller="Account" asp-action="Register">Register</a></li>
+                </ul>
+            }
+        </div>
+    </nav>
+
+    @if (accountType == "Company")
+    {
+        <div class="app-layout">
+            <!-- Company sidebar navigation -->
+            <nav class="sidebar py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link @ActiveIf("CompanyDashboard")" asp-controller="CompanyDashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link @ActiveIf("Employees")" asp-controller="Employees" asp-action="Index">Employees</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Employees" asp-action="Index">Book Appointment</a></li>
+                    <li class="nav-item"><a class="nav-link @ActiveIf("Appointments")" asp-controller="Appointments" asp-action="Index">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">Notifications</a></li>
+                </ul>
+            </nav>
+            <main class="main-content">
+                @await Html.PartialAsync("_StatusMessages")
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else if (accountType == "University")
+    {
+        <div class="app-layout">
+            <!-- University sidebar navigation -->
+            <nav class="sidebar py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link @ActiveIf("UniversityDashboard")" asp-controller="UniversityDashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link @ActiveIf("AppointmentSlots")" asp-controller="AppointmentSlots" asp-action="Index">Appointment Slots</a></li>
+                    <li class="nav-item"><a class="nav-link @ActiveIf("Appointments")" asp-controller="Appointments" asp-action="Index">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="UniversityDashboard" asp-action="Companies">Companies</a></li>
+                    <li class="nav-item"><a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">Notifications</a></li>
+                </ul>
+            </nav>
+            <main class="main-content">
+                @await Html.PartialAsync("_StatusMessages")
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <main class="container">
+            @await Html.PartialAsync("_StatusMessages")
+            @RenderBody()
+        </main>
+    }
+
+    <!-- Simple loading overlay, shown briefly while a form is submitting (see site.js) -->
+    <div id="page-loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

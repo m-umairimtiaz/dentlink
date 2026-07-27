@@ -1,0 +1,88 @@
+@model UniversityDashboardViewModel
+@{
+    ViewData["Title"] = "University Dashboard";
+}
+
+<h2 class="mb-4">University Dashboard</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalCompanies</div>
+            <div class="stat-label">Companies Booked</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalUpcomingAppointments</div>
+            <div class="stat-label">Upcoming Appointments</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalEmployeesExpected</div>
+            <div class="stat-label">Employees Expected</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TodaysAppointments.Count</div>
+            <div class="stat-label">Today's Appointments</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-white">Today's Appointments</div>
+            <div class="card-body p-0">
+                @if (Model.TodaysAppointments.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No appointments scheduled for today.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead>
+                            <tr><th>Company</th><th>Time</th><th>Employees</th><th>Status</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appointment in Model.TodaysAppointments)
+                            {
+                                <tr>
+                                    <td>@appointment.Company?.CompanyName</td>
+                                    <td>@appointment.StartTime.ToString("hh:mm tt")</td>
+                                    <td>@appointment.AppointmentEmployees.Count</td>
+                                    <td><partial name="_StatusBadge" model="appointment.Status" /></td>
+                                    <td><a class="btn btn-sm btn-outline-secondary" asp-controller="Appointments" asp-action="Details" asp-route-id="@appointment.AppointmentId">View</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header bg-white">Recent Notifications</div>
+            <ul class="list-group list-group-flush">
+                @if (Model.RecentNotifications.Count == 0)
+                {
+                    <li class="list-group-item text-muted">No notifications yet.</li>
+                }
+                else
+                {
+                    @foreach (var notification in Model.RecentNotifications)
+                    {
+                        <li class="list-group-item @(notification.IsRead ? "" : "fw-bold")">
+                            @notification.Message
+                            <div class="small text-muted">@notification.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</div>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>

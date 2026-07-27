@@ -1,0 +1,123 @@
+@model BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<h2 class="mb-4">Book Appointment for Selected Employees</h2>
+
+<div class="card" style="max-width:800px">
+    <div class="card-body">
+        <form asp-action="Book" method="post" id="book-appointment-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="UniversityId" class="form-label">Select University</label>
+                <select asp-for="UniversityId" id="university-select" class="form-select">
+                    <option value="">-- Select University --</option>
+                    @foreach (var university in Model.Universities)
+                    {
+                        <option value="@university.UniversityId">@university.UniversityName</option>
+                    }
+                </select>
+                <span asp-validation-for="UniversityId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AppointmentSlotId" class="form-label">Appointment Date &amp; Time</label>
+                <!-- This dropdown starts empty and is filled in by JavaScript once a university is chosen (see Scripts section below) -->
+                <select asp-for="AppointmentSlotId" id="slot-select" class="form-select">
+                    <option value="">-- Select University First --</option>
+                </select>
+                <span asp-validation-for="AppointmentSlotId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Purpose" class="form-label">Reason / Purpose</label>
+                <textarea asp-for="Purpose" class="form-control" rows="3" placeholder="e.g. Annual medical check-up"></textarea>
+                <span asp-validation-for="Purpose" class="text-danger"></span>
+            </div>
+
+            <label class="form-label">Selected Employees (@Model.SelectedEmployees.Count)</label>
+            <span asp-validation-for="EmployeeIds" class="text-danger d-block"></span>
+            <table class="table table-sm" id="selected-employees-table">
+                <thead>
+                    <tr><th>Employee #</th><th>Full Name</th><th>Department</th><th></th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in Model.SelectedEmployees)
+                    {
+                        <tr>
+                            <td>
+                                @employee.EmployeeNumber
+                                <input type="hidden" name="EmployeeIds" value="@employee.EmployeeId" />
+                            </td>
+                            <td>@employee.FullName</td>
+                            <td>@employee.Department</td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-employee-btn">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success-brand">Confirm Appointment</button>
+                <a asp-controller="Employees" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        // When the company picks a university, ask the server (AJAX/fetch) which slots
+        // are actually available for that university, then fill in the second dropdown.
+        document.getElementById('university-select').addEventListener('change', function () {
+            var universityId = this.value;
+            var slotSelect = document.getElementById('slot-select');
+
+            if (!universityId) {
+                slotSelect.innerHTML = '<option value="">-- Select University First --</option>';
+                return;
+            }
+
+            slotSelect.innerHTML = '<option value="">Loading...</option>';
+
+            fetch('/AppointmentSlots/GetAvailableSlots?universityId=' + encodeURIComponent(universityId))
+                .then(function (response) { return response.json(); })
+                .then(function (slots) {
+                    slotSelect.innerHTML = '<option value="">-- Select Appointment Slot --</option>';
+                    slots.forEach(function (slot) {
+                        var option = document.createElement('option');
+                        option.value = slot.appointmentSlotId;
+                        option.textContent = slot.displayText;
+                        if (!slot.isBookable) {
+                            option.disabled = true;               // cannot be chosen
+                            option.className = 'slot-unavailable'; // shown in grey, see site.css
+                        }
+                        slotSelect.appendChild(option);
+                    });
+                });
+        });
+
+        // "Remove" just deletes the table row (and its hidden EmployeeIds input) from the page
+        // before the form is submitted - it does not delete the employee record itself.
+        document.getElementById('selected-employees-table').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-employee-btn')) {
+                e.target.closest('tr').remove();
+            }
+        });
+
+        // Do not let the company submit a booking with zero employees left in the list.
+        document.getElementById('book-appointment-form').addEventListener('submit', function (e) {
+            var remaining = document.querySelectorAll('#selected-employees-table tbody tr').length;
+            if (remaining === 0) {
+                e.preventDefault();
+                alert('At least one employee must be selected to book an appointment.');
+            }
+        });
+    </script>
+}
