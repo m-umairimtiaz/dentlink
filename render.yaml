@@ -1,9 +1,10 @@
 services:
   - type: web
     name: dentlink
-    runtime: dotnet
-    buildCommand: dotnet publish src/UniversityCompanyAppointmentSystem/UniversityCompanyAppointmentSystem.csproj -c Release -o out
-    startCommand: dotnet out/UniversityCompanyAppointmentSystem.dll
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production

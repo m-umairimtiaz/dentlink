@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/publish/
+**/.vs/
+**/.git/
+**/DentLink-deploy.zip
+**/*.md
+**/node_modules/
