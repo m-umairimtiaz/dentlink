@@ -593,11 +593,95 @@ body {
 }
 
 .table tbody tr {
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
-.table tbody tr:hover {
-    background-color: rgba(13, 59, 102, 0.04);
+.table > tbody > tr:nth-of-type(odd) {
+    background-color: #f7fbff;
+}
+
+.table > tbody > tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table > tbody > tr:hover {
+    background-color: #e8f3fc !important;
+    box-shadow: inset 3px 0 0 var(--brand-dark-blue);
+}
+
+.table > tbody > tr.slot-unavailable {
+    background-color: #f3f4f6 !important;
+    color: #9aa5b1;
+}
+
+.table > tbody > tr.slot-unavailable:hover {
+    background-color: #ebecef !important;
+    box-shadow: inset 3px 0 0 #9aa5b1;
+}
+
+/* Edit / Delete action buttons in tables */
+.table .btn-outline-secondary,
+.table .btn-outline-danger {
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s var(--motion-ease),
+        box-shadow 0.25s ease;
+}
+
+.table .btn-outline-secondary {
+    color: var(--brand-dark-blue);
+    border-color: rgba(13, 59, 102, 0.35);
+    background-color: rgba(13, 59, 102, 0.06);
+}
+
+.table .btn-outline-secondary:hover {
+    color: #fff;
+    background-color: var(--brand-dark-blue);
+    border-color: var(--brand-dark-blue);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 14px rgba(13, 59, 102, 0.25);
+}
+
+.table .btn-outline-danger {
+    color: #c62828;
+    border-color: rgba(198, 40, 40, 0.35);
+    background-color: rgba(198, 40, 40, 0.06);
+}
+
+.table .btn-outline-danger:hover {
+    color: #fff;
+    background-color: #c62828;
+    border-color: #c62828;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 14px rgba(198, 40, 40, 0.28);
+    animation: deletePulse 0.55s var(--motion-ease);
+}
+
+.table .btn-outline-secondary:active,
+.table .btn-outline-danger:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.table td.text-end {
+    white-space: nowrap;
+}
+
+.table td.text-end .btn + .btn,
+.table td.text-end form {
+    margin-left: 0.35rem;
+}
+
+@keyframes deletePulse {
+    0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.35); }
+    70% { box-shadow: 0 0 0 8px rgba(198, 40, 40, 0); }
+    100% { box-shadow: 0 6px 14px rgba(198, 40, 40, 0.28); }
 }
 
 @keyframes tableHeaderShine {
@@ -633,6 +717,12 @@ body {
 
     .table > thead > tr > th,
     .table > thead > tr > th::after {
+        animation: none !important;
+    }
+
+    .table .btn-outline-secondary:hover,
+    .table .btn-outline-danger:hover {
+        transform: none;
         animation: none !important;
     }
 
