@@ -235,8 +235,9 @@ body {
 }
 
 .dentlink-hero-logo {
-    width: 68px;
-    height: 68px;
+    width: 80px !important;
+    height: 80px !important;
+    max-width: 80px;
     display: block;
     filter: drop-shadow(0 6px 12px rgba(3, 155, 229, 0.24));
 }
