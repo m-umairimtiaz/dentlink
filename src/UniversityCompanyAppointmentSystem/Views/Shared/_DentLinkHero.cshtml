@@ -1,9 +1,42 @@
-<div class="text-center pt-4 position-relative dentlink-hero">
-    <img src="~/images/dentlink-logo.svg" alt="" class="dentlink-hero-logo" />
-    <div class="position-relative">
-        <h1 class="display-6 mb-0" style="color:var(--brand-dark-blue)">Welcome to DentLink</h1>
-        <p class="text-muted mb-4">
-            Connecting Universities and Companies
-        </p>
+<div class="text-center pt-4 dentlink-hero animate-fade-in">
+    <div class="dentlink-hero-logo-wrap" aria-hidden="true">
+        <svg class="dentlink-hero-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="DentLink dental logo">
+            <defs>
+                <linearGradient id="heroToothTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4fc3f7" />
+                    <stop offset="100%" stop-color="#039be5" />
+                </linearGradient>
+                <linearGradient id="heroToothBottom" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0277bd" />
+                    <stop offset="100%" stop-color="#0d3b66" />
+                </linearGradient>
+                <path id="heroToothShape" d="
+                    M62,36 C50,36 40,43 35,54 C28,70 27,86 34,101
+                    C39,111 45,119 49,129 C53,139 57,150 61,164
+                    C64,177 69,190 79,190 C88,190 91,177 94,163
+                    C96,155 98,150 100,150 C102,150 104,155 106,163
+                    C109,177 112,190 121,190 C131,190 136,177 139,164
+                    C143,150 147,139 151,129 C155,119 161,111 166,101
+                    C173,86 172,70 165,54 C160,43 150,36 138,36
+                    C130,36 124,40 118,39 C112,37 106,35 100,35
+                    C94,35 88,37 82,39 C76,40 70,36 62,36 Z" />
+                <clipPath id="heroToothClip">
+                    <use href="#heroToothShape" />
+                </clipPath>
+            </defs>
+            <use href="#heroToothShape" fill="url(#heroToothTop)" />
+            <g clip-path="url(#heroToothClip)">
+                <path fill="url(#heroToothBottom)" d="M20,110 C60,99 140,99 180,112 L180,200 L20,200 Z" />
+                <path fill="#ffffff" d="M20,104 C60,93 140,93 180,106 L180,113 C140,100 60,100 20,111 Z" />
+            </g>
+            <path d="M55,52 C47,61 44,72 48,83" fill="none" stroke="#ffffff" stroke-width="4"
+                  stroke-linecap="round" opacity="0.85" clip-path="url(#heroToothClip)" />
+            <path class="tooth-sparkle tooth-sparkle-lg" fill="#ffffff" d="M128,44 L132,53 L141,57 L132,61 L128,70 L124,61 L115,57 L124,53 Z" />
+            <path class="tooth-sparkle tooth-sparkle-sm" fill="#ffffff" d="M145,62 L147,68 L153,70 L147,72 L145,78 L143,72 L137,70 L143,68 Z" />
+        </svg>
     </div>
+    <h1 class="display-6 mb-0 dentlink-hero-title">Welcome to DentLink</h1>
+    <p class="text-muted mb-4 dentlink-hero-subtitle">
+        Connecting Universities and Companies
+    </p>
 </div>

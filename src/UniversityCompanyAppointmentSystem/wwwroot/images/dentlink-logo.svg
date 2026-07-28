@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="DentLink tooth logo">
   <defs>
     <linearGradient id="toothTopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#4fc3f7" />
@@ -9,7 +9,6 @@
       <stop offset="100%" stop-color="#0d3b66" />
     </linearGradient>
 
-    <!-- Single tooth silhouette: flatter, wider crown (not a circle) tapering into two roots -->
     <path id="toothShape" d="
       M62,36
       C50,36 40,43 35,54
@@ -36,20 +35,16 @@
     </clipPath>
   </defs>
 
-  <!-- Base crown colour fills the whole tooth -->
-  <use href="#toothShape" fill="url(#toothTopGrad)" />
-
-  <!-- Darker lower band + white shine, both clipped so they never spill outside the tooth outline -->
-  <g clip-path="url(#toothClip)">
-    <path fill="url(#toothBottomGrad)" d="M20,110 C60,99 140,99 180,112 L180,200 L20,200 Z" />
-    <path fill="#ffffff" d="M20,104 C60,93 140,93 180,106 L180,113 C140,100 60,100 20,111 Z" />
+  <g class="tooth-body">
+    <use href="#toothShape" fill="url(#toothTopGrad)" />
+    <g clip-path="url(#toothClip)">
+      <path fill="url(#toothBottomGrad)" d="M20,110 C60,99 140,99 180,112 L180,200 L20,200 Z" />
+      <path class="tooth-shine" fill="#ffffff" d="M20,104 C60,93 140,93 180,106 L180,113 C140,100 60,100 20,111 Z" />
+    </g>
+    <path d="M55,52 C47,61 44,72 48,83" fill="none" stroke="#ffffff" stroke-width="4"
+          stroke-linecap="round" opacity="0.85" clip-path="url(#toothClip)" />
   </g>
 
-  <!-- Curved highlight on the crown -->
-  <path d="M55,52 C47,61 44,72 48,83" fill="none" stroke="#ffffff" stroke-width="4"
-        stroke-linecap="round" opacity="0.85" clip-path="url(#toothClip)" />
-
-  <!-- Sparkle stars -->
-  <path fill="#ffffff" d="M128,44 L132,53 L141,57 L132,61 L128,70 L124,61 L115,57 L124,53 Z" />
-  <path fill="#ffffff" d="M145,62 L147,68 L153,70 L147,72 L145,78 L143,72 L137,70 L143,68 Z" />
+  <path class="tooth-sparkle tooth-sparkle-lg" fill="#ffffff" d="M128,44 L132,53 L141,57 L132,61 L128,70 L124,61 L115,57 L124,53 Z" />
+  <path class="tooth-sparkle tooth-sparkle-sm" fill="#ffffff" d="M145,62 L147,68 L153,70 L147,72 L145,78 L143,72 L137,70 L143,68 Z" />
 </svg>

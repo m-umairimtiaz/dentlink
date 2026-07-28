@@ -14,15 +14,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Dental Appointment System</title>
+    <title>@ViewData["Title"] - DentLink</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/dentlink-logo.svg" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="page-enter">
     <!-- Top navigation bar: shown on every page -->
     <nav class="navbar navbar-expand-sm topbar mb-0">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Dental Appointment System</a>
+            <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                <img src="~/images/dentlink-logo.svg" alt="" class="navbar-brand-logo" width="32" height="32" />
+                <span>DentLink</span>
+            </a>
 
             @if (accountType != null)
             {
@@ -70,7 +74,7 @@
                     <li class="nav-item"><a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">Notifications</a></li>
                 </ul>
             </nav>
-            <main class="main-content">
+            <main class="main-content animate-fade-in">
                 @await Html.PartialAsync("_StatusMessages")
                 @RenderBody()
             </main>
@@ -89,7 +93,7 @@
                     <li class="nav-item"><a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">Notifications</a></li>
                 </ul>
             </nav>
-            <main class="main-content">
+            <main class="main-content animate-fade-in">
                 @await Html.PartialAsync("_StatusMessages")
                 @RenderBody()
             </main>
@@ -97,7 +101,7 @@
     }
     else
     {
-        <main class="container">
+        <main class="container animate-fade-in">
             @await Html.PartialAsync("_StatusMessages")
             @RenderBody()
         </main>
@@ -105,8 +109,8 @@
 
     <!-- Simple loading overlay, shown briefly while a form is submitting (see site.js) -->
     <div id="page-loading-overlay">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+        <div class="loading-tooth" aria-hidden="true">
+            <img src="~/images/dentlink-logo.svg" alt="" width="56" height="56" />
         </div>
     </div>
 
