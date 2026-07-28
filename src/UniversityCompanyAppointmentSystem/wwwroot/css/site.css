@@ -542,13 +542,84 @@ body {
     filter: drop-shadow(0 8px 16px rgba(13, 59, 102, 0.2));
 }
 
-/* Soft table row hover for dashboards */
+/* Soft table styling with branded animated headers */
+.table {
+    --bs-table-hover-bg: rgba(13, 59, 102, 0.045);
+    border-color: var(--brand-border-grey);
+    overflow: hidden;
+}
+
+.table > thead {
+    vertical-align: middle;
+}
+
+.table > thead > tr > th {
+    position: relative;
+    background: linear-gradient(135deg, #0d3b66 0%, #145a8a 55%, #0d3b66 100%);
+    background-size: 200% 100%;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    border-bottom: none !important;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    white-space: nowrap;
+    animation: tableHeaderShine 6s ease-in-out infinite, tableHeaderIn 0.45s var(--motion-ease) both;
+    box-shadow: inset 0 -2px 0 rgba(79, 195, 247, 0.45);
+}
+
+.table > thead > tr > th:nth-child(1) { animation-delay: 0s, 0.04s; }
+.table > thead > tr > th:nth-child(2) { animation-delay: 0s, 0.08s; }
+.table > thead > tr > th:nth-child(3) { animation-delay: 0s, 0.12s; }
+.table > thead > tr > th:nth-child(4) { animation-delay: 0s, 0.16s; }
+.table > thead > tr > th:nth-child(5) { animation-delay: 0s, 0.20s; }
+.table > thead > tr > th:nth-child(6) { animation-delay: 0s, 0.24s; }
+.table > thead > tr > th:nth-child(7) { animation-delay: 0s, 0.28s; }
+.table > thead > tr > th:nth-child(8) { animation-delay: 0s, 0.32s; }
+
+.table > thead > tr > th::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+    transform: skewX(-18deg);
+    animation: tableHeaderSweep 4.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
 .table tbody tr {
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .table tbody tr:hover {
     background-color: rgba(13, 59, 102, 0.04);
+}
+
+@keyframes tableHeaderShine {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes tableHeaderSweep {
+    0%, 60%, 100% { left: -40%; opacity: 0; }
+    10% { opacity: 1; }
+    35% { left: 110%; opacity: 0; }
+}
+
+@keyframes tableHeaderIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Respect users who prefer less motion */
@@ -558,6 +629,11 @@ body {
     *::after {
         animation: none !important;
         transition: none !important;
+    }
+
+    .table > thead > tr > th,
+    .table > thead > tr > th::after {
+        animation: none !important;
     }
 
     .sidebar .nav-item {
