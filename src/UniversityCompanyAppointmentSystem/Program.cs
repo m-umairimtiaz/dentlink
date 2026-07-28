@@ -17,11 +17,11 @@ static string GetConnectionString(IConfiguration config)
     var host = Environment.GetEnvironmentVariable("PGHOST");
     if (!string.IsNullOrEmpty(host))
     {
-        var port = Environment.GetEnvironmentVariable("PGPORT") ?? "5432";
-        var user = Environment.GetEnvironmentVariable("PGUSER") ?? "postgres";
-        var password = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "";
-        var database = Environment.GetEnvironmentVariable("PGDATABASE") ?? "postgres";
-        return $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Prefer;Trust Server Certificate=true";
+        var pgPort = Environment.GetEnvironmentVariable("PGPORT") ?? "5432";
+        var pgUser = Environment.GetEnvironmentVariable("PGUSER") ?? "postgres";
+        var pgPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "";
+        var pgDatabase = Environment.GetEnvironmentVariable("PGDATABASE") ?? "postgres";
+        return $"Host={host};Port={pgPort};Database={pgDatabase};Username={pgUser};Password={pgPassword};SSL Mode=Prefer;Trust Server Certificate=true";
     }
 
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -34,10 +34,10 @@ static string GetConnectionString(IConfiguration config)
     var uri = new Uri(databaseUrl);
     var userInfo = uri.UserInfo.Split(':', 2);
     var username = Uri.UnescapeDataString(userInfo[0]);
-    var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
-    var database = uri.AbsolutePath.TrimStart('/');
-    var port = uri.Port > 0 ? uri.Port : 5432;
-    return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Prefer;Trust Server Certificate=true";
+    var passwordFromUrl = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+    var databaseFromUrl = uri.AbsolutePath.TrimStart('/');
+    var portFromUrl = uri.Port > 0 ? uri.Port : 5432;
+    return $"Host={uri.Host};Port={portFromUrl};Database={databaseFromUrl};Username={username};Password={passwordFromUrl};SSL Mode=Prefer;Trust Server Certificate=true";
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
