@@ -21,7 +21,7 @@ namespace UniversityCompanyAppointmentSystem.Data
                     Email = "admin@ku.edu.kw",
                     PhoneNumber = "+965 2225 1234",
                     PasswordHash = passwordHasher.Hash("University@123"), // sample login password, see README
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 context.Universities.Add(university);
                 await context.SaveChangesAsync();
@@ -38,7 +38,7 @@ namespace UniversityCompanyAppointmentSystem.Data
                     Email = "hr@gulftech.com",
                     PhoneNumber = "+965 9001 2345",
                     PasswordHash = passwordHasher.Hash("Company@123"), // sample login password, see README
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 context.Companies.Add(company);
                 await context.SaveChangesAsync();

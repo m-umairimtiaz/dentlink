@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using UniversityCompanyAppointmentSystem.Data;
 using UniversityCompanyAppointmentSystem.Services;
 
+// Npgsql maps DateTime to "timestamp with time zone" and rejects Kind=Local (DateTime.Now).
+// Legacy mode accepts local DateTimes so existing SQL Server-style code keeps working.
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------------------------------------------------------------------------
