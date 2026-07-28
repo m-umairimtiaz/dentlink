@@ -49,6 +49,92 @@ body {
     transform: scale(1.08) rotate(-4deg);
 }
 
+/* Top bar icon buttons (notifications + logout) */
+.topbar-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0 !important;
+    border-radius: 50%;
+    color: var(--brand-white) !important;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: background-color 0.25s ease, transform 0.25s var(--motion-ease), border-color 0.25s ease;
+}
+
+.topbar-icon-btn .nav-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--brand-white);
+    display: inline-flex;
+}
+
+.topbar-icon-btn .nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.topbar-icon-btn:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+    color: var(--brand-white) !important;
+}
+
+.topbar-logout-btn:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.topbar-logout-btn:hover .icon-logout-arrow {
+    animation: logoutSlide 0.55s var(--motion-ease);
+}
+
+.topbar-icon-btn .nav-icon-notifications .icon-bell {
+    transform-origin: top center;
+    animation: bellSway 2.8s ease-in-out infinite;
+}
+
+.topbar-icon-btn:hover .nav-icon-notifications .icon-bell {
+    animation: bellSway 0.7s ease-in-out;
+}
+
+.topbar-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #e53935;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    box-shadow: 0 0 0 2px var(--brand-dark-blue);
+    animation: badgePop 0.45s var(--motion-ease);
+}
+
+.topbar-account {
+    opacity: 0.92;
+    font-size: 0.92rem;
+    white-space: nowrap;
+}
+
+@keyframes logoutSlide {
+    0% { transform: translateX(0); }
+    45% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes badgePop {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
 /* ---------------- Sidebar ---------------- */
 .app-layout {
     display: flex;
@@ -478,11 +564,17 @@ body {
         opacity: 1;
     }
 
+    .sidebar .nav-icon-notifications .icon-bell {
+        animation: none !important;
+    }
+
     .navbar-brand:hover .navbar-brand-logo,
     .stat-card:hover,
     .btn-brand:hover,
     .sidebar .nav-link:hover,
-    .sidebar .nav-link:active {
+    .sidebar .nav-link:active,
+    .sidebar .nav-link:hover .nav-icon,
+    .sidebar .nav-link.active .nav-icon {
         transform: none;
     }
 }

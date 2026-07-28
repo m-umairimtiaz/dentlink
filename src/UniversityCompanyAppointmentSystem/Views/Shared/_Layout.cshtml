@@ -30,23 +30,32 @@
 
             @if (accountType != null)
             {
-                <ul class="navbar-nav flex-row ms-auto align-items-center">
-                    <li class="nav-item me-3">
-                        <a class="nav-link position-relative" asp-controller="Notifications" asp-action="Index">
-                            Notifications
+                <ul class="navbar-nav flex-row ms-auto align-items-center gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link topbar-icon-btn position-relative"
+                           asp-controller="Notifications"
+                           asp-action="Index"
+                           title="Notifications"
+                           aria-label="Notifications@(unreadCount > 0 ? $", {unreadCount} unread" : "")">
+                            @await Html.PartialAsync("_NavIcon", "notifications")
                             @if (unreadCount > 0)
                             {
-                                <span class="badge rounded-pill bg-danger ms-1">@unreadCount</span>
+                                <span class="topbar-badge">@unreadCount</span>
                             }
                         </a>
                     </li>
-                    <li class="nav-item me-3">
-                        <span class="nav-link">@ViewBag.CurrentAccountName (@accountType)</span>
+                    <li class="nav-item me-2">
+                        <span class="nav-link topbar-account">@ViewBag.CurrentAccountName (@accountType)</span>
                     </li>
                     <li class="nav-item">
                         <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                            <button type="submit"
+                                    class="btn topbar-icon-btn topbar-logout-btn"
+                                    title="Logout"
+                                    aria-label="Logout">
+                                @await Html.PartialAsync("_NavIcon", "logout")
+                            </button>
                         </form>
                     </li>
                 </ul>
