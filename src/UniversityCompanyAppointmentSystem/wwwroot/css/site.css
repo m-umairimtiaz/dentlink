@@ -221,37 +221,42 @@ body {
 /* ---------------- Hero + dental logo ---------------- */
 .dentlink-hero {
     position: relative;
-    padding-bottom: 0.5rem;
+    padding-top: 1.25rem;
+    padding-bottom: 0;
 }
 
 .dentlink-hero-logo-wrap {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.5rem;
     animation: logoFloat 4.5s ease-in-out infinite;
 }
 
 .dentlink-hero-logo {
-    width: 88px;
-    height: 88px;
+    width: 72px;
+    height: 72px;
     display: block;
     filter: drop-shadow(0 10px 18px rgba(3, 155, 229, 0.28));
 }
 
 .dentlink-hero-title {
     color: var(--brand-dark-blue);
+    font-size: 1.35rem;
+    font-weight: 600;
     animation: fadeUp 0.7s var(--motion-ease) both;
     animation-delay: 0.08s;
 }
 
 .dentlink-hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 0 !important;
     animation: fadeUp 0.7s var(--motion-ease) both;
     animation-delay: 0.18s;
 }
 
 .dentlink-hero + .auth-card {
-    margin-top: 0;
+    margin-top: 1rem;
 }
 
 /* ---------------- Page motion ---------------- */
