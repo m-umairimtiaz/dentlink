@@ -1,0 +1,63 @@
+@* Tiny animated SVG icons for sidebar nav. Usage: @await Html.PartialAsync("_NavIcon", "dashboard") *@
+@{
+    var name = Model as string ?? "";
+}
+<span class="nav-icon nav-icon-@name" aria-hidden="true">
+@switch (name)
+{
+    case "dashboard":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect class="icon-tile" x="3" y="3" width="7" height="7" rx="1.5"/>
+            <rect class="icon-tile" x="14" y="3" width="7" height="7" rx="1.5"/>
+            <rect class="icon-tile" x="3" y="14" width="7" height="7" rx="1.5"/>
+            <rect class="icon-tile" x="14" y="14" width="7" height="7" rx="1.5"/>
+        </svg>
+        break;
+    case "slots":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M3 10h18"/>
+            <path class="icon-tick" d="M8 3v4M16 3v4"/>
+            <circle class="icon-pulse" cx="12" cy="15" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+        break;
+    case "appointments":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M3 10h18M8 3v4M16 3v4"/>
+            <path class="icon-check" d="M8.5 16l2.2 2.2 5-5"/>
+        </svg>
+        break;
+    case "companies":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20V8l8-4 8 4v12"/>
+            <path d="M9 20v-6h6v6"/>
+            <path class="icon-windows" d="M9 10h2M13 10h2M9 13h2M13 13h2"/>
+        </svg>
+        break;
+    case "notifications":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path class="icon-bell" d="M6 9a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/>
+            <path d="M10 20a2 2 0 0 0 4 0"/>
+        </svg>
+        break;
+    case "employees":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle class="icon-person" cx="9" cy="8" r="3"/>
+            <path d="M3 19c0-3 2.5-5 6-5"/>
+            <circle class="icon-person-2" cx="16.5" cy="9" r="2.5"/>
+            <path d="M14 19c0-2.4 1.8-4 4.5-4 .9 0 1.7.2 2.5.5"/>
+        </svg>
+        break;
+    case "book":
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <path d="M3 10h18M8 3v4M16 3v4"/>
+            <path class="icon-plus" d="M12 13v5M9.5 15.5h5"/>
+        </svg>
+        break;
+    default:
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/></svg>
+        break;
+}
+</span>

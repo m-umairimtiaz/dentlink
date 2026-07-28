@@ -67,11 +67,36 @@
             <!-- Company sidebar navigation -->
             <nav class="sidebar py-3">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link @ActiveIf("CompanyDashboard")" asp-controller="CompanyDashboard" asp-action="Index">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link @ActiveIf("Employees")" asp-controller="Employees" asp-action="Index">Employees</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Employees" asp-action="Index">Book Appointment</a></li>
-                    <li class="nav-item"><a class="nav-link @ActiveIf("Appointments")" asp-controller="Appointments" asp-action="Index">Appointments</a></li>
-                    <li class="nav-item"><a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">Notifications</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("CompanyDashboard")" asp-controller="CompanyDashboard" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "dashboard")
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("Employees")" asp-controller="Employees" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "employees")
+                            <span>Employees</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Employees" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "book")
+                            <span>Book Appointment</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("Appointments")" asp-controller="Appointments" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "appointments")
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "notifications")
+                            <span>Notifications</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <main class="main-content animate-fade-in">
@@ -86,11 +111,36 @@
             <!-- University sidebar navigation -->
             <nav class="sidebar py-3">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link @ActiveIf("UniversityDashboard")" asp-controller="UniversityDashboard" asp-action="Index">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link @ActiveIf("AppointmentSlots")" asp-controller="AppointmentSlots" asp-action="Index">Appointment Slots</a></li>
-                    <li class="nav-item"><a class="nav-link @ActiveIf("Appointments")" asp-controller="Appointments" asp-action="Index">Appointments</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="UniversityDashboard" asp-action="Companies">Companies</a></li>
-                    <li class="nav-item"><a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">Notifications</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("UniversityDashboard")" asp-controller="UniversityDashboard" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "dashboard")
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AppointmentSlots")" asp-controller="AppointmentSlots" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "slots")
+                            <span>Appointment Slots</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("Appointments")" asp-controller="Appointments" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "appointments")
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="UniversityDashboard" asp-action="Companies">
+                            @await Html.PartialAsync("_NavIcon", "companies")
+                            <span>Companies</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "notifications")
+                            <span>Notifications</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <main class="main-content animate-fade-in">
