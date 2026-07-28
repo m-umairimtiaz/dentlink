@@ -10,42 +10,47 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Render.com injects a DATABASE_URL environment variable (postgres://user:pass@host/db).
-// Convert it to an Npgsql connection string when present; otherwise fall back to appsettings.json.
+// Prefer discrete PG* env vars from Render (avoids URI password encoding issues).
+// Fall back to DATABASE_URL, then appsettings.json.
 static string GetConnectionString(IConfiguration config)
 {
+    var host = Environment.GetEnvironmentVariable("PGHOST");
+    if (!string.IsNullOrEmpty(host))
+    {
+        var port = Environment.GetEnvironmentVariable("PGPORT") ?? "5432";
+        var user = Environment.GetEnvironmentVariable("PGUSER") ?? "postgres";
+        var password = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "";
+        var database = Environment.GetEnvironmentVariable("PGDATABASE") ?? "postgres";
+        return $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Prefer;Trust Server Certificate=true";
+    }
+
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
     if (string.IsNullOrEmpty(databaseUrl))
         return config.GetConnectionString("DefaultConnection")!;
 
-    // Already an Npgsql key=value string from Render
     if (!databaseUrl.Contains("://", StringComparison.Ordinal))
         return databaseUrl;
 
-    // Convert postgres://user:pass@host:port/db into Npgsql format
     var uri = new Uri(databaseUrl);
     var userInfo = uri.UserInfo.Split(':', 2);
     var username = Uri.UnescapeDataString(userInfo[0]);
     var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
     var database = uri.AbsolutePath.TrimStart('/');
     var port = uri.Port > 0 ? uri.Port : 5432;
-    return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+    return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Prefer;Trust Server Certificate=true";
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(GetConnectionString(builder.Configuration)));
 
-// Session needs a backing cache to store its data in; in-memory cache is enough for this simple app.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(8);           // how long a login stays active without activity
-    options.Cookie.HttpOnly = true;                        // JavaScript on the page cannot read the session cookie
-    options.Cookie.IsEssential = true;                     // session cookie is required for the app to work (login)
+    options.IdleTimeout = TimeSpan.FromHours(8);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
-// Register our own application services for dependency injection.
-// AddScoped = one instance per web request, which matches how DbContext should be used.
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
@@ -59,17 +64,14 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");                // show a friendly error page instead of a stack trace
-    app.UseHsts();
+    app.UseExceptionHandler("/Home/Error");
+    // Do NOT use HTTPS redirection or HSTS on Render: TLS is terminated at the
+    // reverse proxy and forcing redirects breaks the open-port health check.
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();                                       // serves wwwroot (css/js/images)
-
+app.UseStaticFiles();
 app.UseRouting();
-
-app.UseSession();                                            // must run before UseAuthorization / controllers, so Session is ready
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -82,9 +84,19 @@ app.MapControllerRoute(
 // ---------------------------------------------------------------------------
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();                              // creates the DB and applies migrations automatically
-    await DbSeeder.SeedAsync(context, scope.ServiceProvider.GetRequiredService<IPasswordHasher>());
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+    try
+    {
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+        await DbSeeder.SeedAsync(context, scope.ServiceProvider.GetRequiredService<IPasswordHasher>());
+        logger.LogInformation("Database migrated and seeded successfully.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Database migration/seed failed.");
+        throw;
+    }
 }
 
 app.Run();

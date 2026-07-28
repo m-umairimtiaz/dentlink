@@ -5,13 +5,30 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     dockerContext: .
+    healthCheckPath: /
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      - key: DATABASE_URL
+      - key: PGHOST
         fromDatabase:
           name: dentlink-db
-          property: connectionString
+          property: host
+      - key: PGPORT
+        fromDatabase:
+          name: dentlink-db
+          property: port
+      - key: PGUSER
+        fromDatabase:
+          name: dentlink-db
+          property: user
+      - key: PGPASSWORD
+        fromDatabase:
+          name: dentlink-db
+          property: password
+      - key: PGDATABASE
+        fromDatabase:
+          name: dentlink-db
+          property: database
 
 databases:
   - name: dentlink-db
