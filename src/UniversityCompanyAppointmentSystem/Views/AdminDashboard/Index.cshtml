@@ -1,0 +1,102 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalUniversities</div>
+            <div class="stat-label">Universities</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalCompanies</div>
+            <div class="stat-label">Companies</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalEmployees</div>
+            <div class="stat-label">Employees</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.TotalAppointments</div>
+            <div class="stat-label">Appointments</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.PendingAppointments</div>
+            <div class="stat-label">Pending</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.ConfirmedAppointments</div>
+            <div class="stat-label">Confirmed</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <div class="stat-card">
+            <div class="stat-number">@Model.CompletedAppointments</div>
+            <div class="stat-label">Completed</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span>Recent Appointments</span>
+        <a asp-controller="AdminAppointments" asp-action="Index" class="btn btn-sm btn-outline-secondary">View all</a>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.RecentAppointments.Count == 0)
+        {
+            <p class="text-muted p-3 mb-0">No appointments yet.</p>
+        }
+        else
+        {
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>University</th>
+                        <th>Company</th>
+                        <th>Date</th>
+                        <th>Employees</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appointment in Model.RecentAppointments)
+                    {
+                        <tr>
+                            <td>@appointment.AppointmentReference</td>
+                            <td>@appointment.University?.UniversityName</td>
+                            <td>@appointment.Company?.CompanyName</td>
+                            <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                            <td>@appointment.AppointmentEmployees.Count</td>
+                            <td><partial name="_StatusBadge" model="appointment.Status" /></td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   asp-controller="AdminAppointments"
+                                   asp-action="Details"
+                                   asp-route-id="@appointment.AppointmentId">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

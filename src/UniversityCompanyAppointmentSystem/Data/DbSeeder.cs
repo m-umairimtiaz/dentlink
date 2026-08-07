@@ -10,6 +10,19 @@ namespace UniversityCompanyAppointmentSystem.Data
     {
         public static async Task SeedAsync(ApplicationDbContext context, IPasswordHasher passwordHasher)
         {
+            // ---------- Platform Admin ----------
+            if (!context.Admins.Any(a => a.Email == "admin@dentlink.com"))
+            {
+                context.Admins.Add(new Admin
+                {
+                    FullName = "DentLink Super Admin",
+                    Email = "admin@dentlink.com",
+                    PasswordHash = passwordHasher.Hash("Admin@123"),
+                    CreatedAt = DateTime.UtcNow
+                });
+                await context.SaveChangesAsync();
+            }
+
             // ---------- One sample University ----------
             var university = context.Universities.FirstOrDefault(u => u.Email == "admin@ku.edu.kw");
             if (university == null)

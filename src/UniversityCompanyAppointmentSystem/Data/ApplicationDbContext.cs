@@ -16,6 +16,7 @@ namespace UniversityCompanyAppointmentSystem.Data
         }
 
         // One DbSet per table in the database.
+        public DbSet<Admin> Admins => Set<Admin>();
         public DbSet<University> Universities => Set<University>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<Employee> Employees => Set<Employee>();
@@ -27,6 +28,11 @@ namespace UniversityCompanyAppointmentSystem.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // ---------- Admin ----------
+            modelBuilder.Entity<Admin>()
+                .HasIndex(a => a.Email)
+                .IsUnique();
 
             // ---------- University ----------
             modelBuilder.Entity<University>()

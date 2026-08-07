@@ -1,0 +1,73 @@
+@model Appointment
+@{
+    ViewData["Title"] = Model.AppointmentReference;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">@Model.AppointmentReference</h2>
+    <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">Appointment Details</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Status</dt><dd class="col-sm-8"><partial name="_StatusBadge" model="Model.Status" /></dd>
+                    <dt class="col-sm-4">University</dt>
+                    <dd class="col-sm-8">
+                        <a asp-controller="AdminUniversities" asp-action="Details" asp-route-id="@Model.UniversityId">
+                            @Model.University?.UniversityName
+                        </a>
+                    </dd>
+                    <dt class="col-sm-4">Company</dt>
+                    <dd class="col-sm-8">
+                        <a asp-controller="AdminCompanies" asp-action="Details" asp-route-id="@Model.CompanyId">
+                            @Model.Company?.CompanyName
+                        </a>
+                    </dd>
+                    <dt class="col-sm-4">Date</dt><dd class="col-sm-8">@Model.AppointmentDate.ToString("dd MMM yyyy")</dd>
+                    <dt class="col-sm-4">Time</dt><dd class="col-sm-8">@Model.StartTime.ToString("hh:mm tt") - @Model.EndTime.ToString("hh:mm tt")</dd>
+                    <dt class="col-sm-4">Purpose</dt><dd class="col-sm-8">@Model.Purpose</dd>
+                    <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@Model.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">Employees (@Model.AppointmentEmployees.Count)</div>
+            <div class="card-body p-0">
+                @if (Model.AppointmentEmployees.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No employees linked.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead><tr><th>#</th><th>Name</th><th>Department</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var link in Model.AppointmentEmployees)
+                            {
+                                var employee = link.Employee;
+                                if (employee == null) { continue; }
+                                <tr>
+                                    <td>@employee.EmployeeNumber</td>
+                                    <td>@employee.FullName</td>
+                                    <td>@employee.Department</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                           asp-controller="AdminEmployees"
+                                           asp-action="Details"
+                                           asp-route-id="@employee.EmployeeId">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

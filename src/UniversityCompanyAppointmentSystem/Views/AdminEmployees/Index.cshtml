@@ -1,0 +1,71 @@
+@model AdminEmployeeListViewModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h2 class="mb-3">All Employees</h2>
+
+<form method="get" asp-action="Index" class="row g-2 mb-3">
+    <div class="col-md-3">
+        <input type="text" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Search name, number, civil ID..." />
+    </div>
+    <div class="col-md-3">
+        <select name="companyId" class="form-select">
+            <option value="">All companies</option>
+            @foreach (var company in Model.Companies)
+            {
+                if (Model.CompanyId == company.CompanyId)
+                {
+                    <option value="@company.CompanyId" selected>@company.CompanyName</option>
+                }
+                else
+                {
+                    <option value="@company.CompanyId">@company.CompanyName</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto"><button type="submit" class="btn btn-outline-secondary">Filter</button></div>
+    <div class="col-auto"><a asp-action="Index" class="btn btn-link">Clear</a></div>
+</form>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Employees.Count == 0)
+        {
+            <p class="text-muted p-3 mb-0">No employees found.</p>
+        }
+        else
+        {
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Employee #</th>
+                        <th>Full Name</th>
+                        <th>Civil ID</th>
+                        <th>Department</th>
+                        <th>Job Title</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in Model.Employees)
+                    {
+                        <tr>
+                            <td>@employee.Company?.CompanyName</td>
+                            <td>@employee.EmployeeNumber</td>
+                            <td>@employee.FullName</td>
+                            <td>@employee.CivilId</td>
+                            <td>@employee.Department</td>
+                            <td>@employee.JobTitle</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@employee.EmployeeId">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

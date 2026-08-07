@@ -31,19 +31,22 @@
             @if (accountType != null)
             {
                 <ul class="navbar-nav flex-row ms-auto align-items-center gap-1">
-                    <li class="nav-item">
-                        <a class="nav-link topbar-icon-btn position-relative"
-                           asp-controller="Notifications"
-                           asp-action="Index"
-                           title="Notifications"
-                           aria-label="Notifications@(unreadCount > 0 ? $", {unreadCount} unread" : "")">
-                            @await Html.PartialAsync("_NavIcon", "notifications")
-                            @if (unreadCount > 0)
-                            {
-                                <span class="topbar-badge">@unreadCount</span>
-                            }
-                        </a>
-                    </li>
+                    @if (accountType != "Admin")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link topbar-icon-btn position-relative"
+                               asp-controller="Notifications"
+                               asp-action="Index"
+                               title="Notifications"
+                               aria-label="Notifications@(unreadCount > 0 ? $", {unreadCount} unread" : "")">
+                                @await Html.PartialAsync("_NavIcon", "notifications")
+                                @if (unreadCount > 0)
+                                {
+                                    <span class="topbar-badge">@unreadCount</span>
+                                }
+                            </a>
+                        </li>
+                    }
                     <li class="nav-item me-2">
                         <span class="nav-link topbar-account">@ViewBag.CurrentAccountName (@accountType)</span>
                     </li>
@@ -148,6 +151,55 @@
                         <a class="nav-link @ActiveIf("Notifications")" asp-controller="Notifications" asp-action="Index">
                             @await Html.PartialAsync("_NavIcon", "notifications")
                             <span>Notifications</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <main class="main-content animate-fade-in">
+                @await Html.PartialAsync("_StatusMessages")
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else if (accountType == "Admin")
+    {
+        <div class="app-layout">
+            <nav class="sidebar py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AdminDashboard")" asp-controller="AdminDashboard" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "dashboard")
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AdminUniversities")" asp-controller="AdminUniversities" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "universities")
+                            <span>Universities</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AdminCompanies")" asp-controller="AdminCompanies" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "companies")
+                            <span>Companies</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AdminEmployees")" asp-controller="AdminEmployees" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "employees")
+                            <span>Employees</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AdminAppointments")" asp-controller="AdminAppointments" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "appointments")
+                            <span>Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @ActiveIf("AdminReports")" asp-controller="AdminReports" asp-action="Index">
+                            @await Html.PartialAsync("_NavIcon", "reports")
+                            <span>Reports</span>
                         </a>
                     </li>
                 </ul>

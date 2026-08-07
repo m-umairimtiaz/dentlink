@@ -15,7 +15,13 @@
 
     <div class="sample-login-actions mb-3">
         <p class="small text-muted text-center mb-2">Quick demo login — fill sample details:</p>
-        <div class="d-flex gap-2">
+        <div class="d-flex flex-wrap gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary flex-fill sample-login-btn"
+                    data-email="admin@dentlink.com"
+                    data-password="Admin@123">
+                Admin
+            </button>
             <button type="button"
                     class="btn btn-outline-secondary flex-fill sample-login-btn"
                     data-email="admin@ku.edu.kw"
@@ -76,7 +82,7 @@
                 });
             });
 
-            // Pre-fill University sample on load so the form is ready immediately.
+            // Pre-fill Admin sample on load so the form is ready immediately.
             if (buttons.length > 0) {
                 buttons[0].click();
             }

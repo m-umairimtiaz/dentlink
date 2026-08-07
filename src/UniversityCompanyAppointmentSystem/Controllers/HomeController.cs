@@ -19,6 +19,10 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         // Already logged in? Skip the welcome page and go straight to the right dashboard.
+        if (HttpContext.Session.GetInt32(SessionKeys.AdminId) != null)
+        {
+            return RedirectToAction("Index", "AdminDashboard");
+        }
         if (HttpContext.Session.GetInt32(SessionKeys.CompanyId) != null)
         {
             return RedirectToAction("Index", "CompanyDashboard");

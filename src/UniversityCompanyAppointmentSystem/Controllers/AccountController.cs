@@ -46,10 +46,10 @@ namespace UniversityCompanyAppointmentSystem.Controllers
                 return View(model);                     // redisplay the form with validation messages
             }
 
-            // Email must be unique across BOTH Universities and Companies, otherwise login
-            // could not tell which account type an email belongs to.
+            // Email must be unique across Universities, Companies, and Admins.
             bool emailTaken = await _context.Universities.AnyAsync(u => u.Email == model.Email)
-                             || await _context.Companies.AnyAsync(c => c.Email == model.Email);
+                             || await _context.Companies.AnyAsync(c => c.Email == model.Email)
+                             || await _context.Admins.AnyAsync(a => a.Email == model.Email);
             if (emailTaken)
             {
                 ModelState.AddModelError(nameof(model.Email), "This email is already registered.");
@@ -91,7 +91,8 @@ namespace UniversityCompanyAppointmentSystem.Controllers
             }
 
             bool emailTaken = await _context.Universities.AnyAsync(u => u.Email == model.Email)
-                             || await _context.Companies.AnyAsync(c => c.Email == model.Email);
+                             || await _context.Companies.AnyAsync(c => c.Email == model.Email)
+                             || await _context.Admins.AnyAsync(a => a.Email == model.Email);
             if (emailTaken)
             {
                 ModelState.AddModelError(nameof(model.Email), "This email is already registered.");
@@ -132,6 +133,23 @@ namespace UniversityCompanyAppointmentSystem.Controllers
                 return View(model);
             }
 
+            // Platform admin first, then company, then university.
+            var admin = await _context.Admins.FirstOrDefaultAsync(a => a.Email == model.Email);
+            if (admin != null)
+            {
+                if (!_passwordHasher.Verify(model.Password, admin.PasswordHash))
+                {
+                    ModelState.AddModelError(string.Empty, "Incorrect email or password.");
+                    return View(model);
+                }
+
+                HttpContext.Session.SetInt32(SessionKeys.AdminId, admin.AdminId);
+                HttpContext.Session.SetString(SessionKeys.AccountType, "Admin");
+                HttpContext.Session.SetString(SessionKeys.DisplayName, admin.FullName);
+
+                return RedirectToAction("Index", "AdminDashboard");
+            }
+
             // Try to find the email among Companies first, then Universities.
             var company = await _context.Companies.FirstOrDefaultAsync(c => c.Email == model.Email);
             if (company != null)
@@ -166,7 +184,7 @@ namespace UniversityCompanyAppointmentSystem.Controllers
                 return RedirectToAction("Index", "UniversityDashboard");
             }
 
-            // Neither table had a match for this email.
+            // No account matched this email.
             ModelState.AddModelError(string.Empty, "Incorrect email or password.");
             return View(model);
         }

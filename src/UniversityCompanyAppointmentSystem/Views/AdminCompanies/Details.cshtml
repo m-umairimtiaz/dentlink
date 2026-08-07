@@ -1,0 +1,100 @@
+@model AdminCompanyDetailsViewModel
+@{
+    ViewData["Title"] = Model.Company.CompanyName;
+    var c = Model.Company;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">@c.CompanyName</h2>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+        <a class="btn btn-brand" asp-action="Edit" asp-route-id="@c.CompanyId">Edit</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">Company Details</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Contact</dt><dd class="col-sm-8">@c.ContactPersonName</dd>
+                    <dt class="col-sm-4">Email</dt><dd class="col-sm-8">@c.Email</dd>
+                    <dt class="col-sm-4">Phone</dt><dd class="col-sm-8">@c.PhoneNumber</dd>
+                    <dt class="col-sm-4">Created</dt><dd class="col-sm-8">@c.CreatedAt.ToString("dd MMM yyyy")</dd>
+                    <dt class="col-sm-4">Employees</dt><dd class="col-sm-8">@Model.Employees.Count</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-white">Employees</div>
+            <div class="card-body p-0">
+                @if (Model.Employees.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No employees.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead><tr><th>#</th><th>Name</th><th>Department</th><th>Job Title</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var employee in Model.Employees)
+                            {
+                                <tr>
+                                    <td>@employee.EmployeeNumber</td>
+                                    <td>@employee.FullName</td>
+                                    <td>@employee.Department</td>
+                                    <td>@employee.JobTitle</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                           asp-controller="AdminEmployees"
+                                           asp-action="Details"
+                                           asp-route-id="@employee.EmployeeId">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header bg-white">Recent Appointments</div>
+            <div class="card-body p-0">
+                @if (Model.RecentAppointments.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No appointments.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead><tr><th>University</th><th>Date</th><th>Status</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var appointment in Model.RecentAppointments)
+                            {
+                                <tr>
+                                    <td>@appointment.University?.UniversityName</td>
+                                    <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                                    <td><partial name="_StatusBadge" model="appointment.Status" /></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                           asp-controller="AdminAppointments"
+                                           asp-action="Details"
+                                           asp-route-id="@appointment.AppointmentId">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

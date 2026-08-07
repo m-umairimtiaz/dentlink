@@ -1,0 +1,123 @@
+@model AdminReportsViewModel
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2 class="mb-3">Reporting</h2>
+
+<form method="get" asp-action="Index" class="row g-2 mb-4">
+    <div class="col-md-2">
+        <label class="form-label">From</label>
+        <input type="date" name="fromDate" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">To</label>
+        <input type="date" name="toDate" value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">University</label>
+        <select name="universityId" class="form-select">
+            <option value="">All</option>
+            @foreach (var university in Model.Universities)
+            {
+                if (Model.UniversityId == university.UniversityId)
+                {
+                    <option value="@university.UniversityId" selected>@university.UniversityName</option>
+                }
+                else
+                {
+                    <option value="@university.UniversityId">@university.UniversityName</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Company</label>
+        <select name="companyId" class="form-select">
+            <option value="">All</option>
+            @foreach (var company in Model.Companies)
+            {
+                if (Model.CompanyId == company.CompanyId)
+                {
+                    <option value="@company.CompanyId" selected>@company.CompanyName</option>
+                }
+                else
+                {
+                    <option value="@company.CompanyId">@company.CompanyName</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end gap-2">
+        <button type="submit" class="btn btn-brand">Run Report</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+    </div>
+</form>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-sm-4"><div class="stat-card"><div class="stat-number">@Model.TotalAppointments</div><div class="stat-label">Total</div></div></div>
+    <div class="col-md-2 col-sm-4"><div class="stat-card"><div class="stat-number">@Model.PendingCount</div><div class="stat-label">Pending</div></div></div>
+    <div class="col-md-2 col-sm-4"><div class="stat-card"><div class="stat-number">@Model.ConfirmedCount</div><div class="stat-label">Confirmed</div></div></div>
+    <div class="col-md-2 col-sm-4"><div class="stat-card"><div class="stat-number">@Model.CompletedCount</div><div class="stat-label">Completed</div></div></div>
+    <div class="col-md-2 col-sm-4"><div class="stat-card"><div class="stat-number">@Model.RejectedCount</div><div class="stat-label">Rejected</div></div></div>
+    <div class="col-md-2 col-sm-4"><div class="stat-card"><div class="stat-number">@Model.TotalEmployeesBooked</div><div class="stat-label">Employees Booked</div></div></div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">By University</div>
+            <div class="card-body p-0">
+                @if (Model.ByUniversity.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No data for selected filters.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead><tr><th>University</th><th>Appointments</th><th>Employees</th><th>Completed</th></tr></thead>
+                        <tbody>
+                            @foreach (var row in Model.ByUniversity)
+                            {
+                                <tr>
+                                    <td>@row.Name</td>
+                                    <td>@row.AppointmentCount</td>
+                                    <td>@row.EmployeeCount</td>
+                                    <td>@row.CompletedCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white">By Company</div>
+            <div class="card-body p-0">
+                @if (Model.ByCompany.Count == 0)
+                {
+                    <p class="text-muted p-3 mb-0">No data for selected filters.</p>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead><tr><th>Company</th><th>Appointments</th><th>Employees</th><th>Completed</th></tr></thead>
+                        <tbody>
+                            @foreach (var row in Model.ByCompany)
+                            {
+                                <tr>
+                                    <td>@row.Name</td>
+                                    <td>@row.AppointmentCount</td>
+                                    <td>@row.EmployeeCount</td>
+                                    <td>@row.CompletedCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

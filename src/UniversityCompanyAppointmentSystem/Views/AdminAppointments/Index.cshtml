@@ -1,0 +1,105 @@
+@model AdminAppointmentListViewModel
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<h2 class="mb-3">All Appointments</h2>
+
+<form method="get" asp-action="Index" class="row g-2 mb-3">
+    <div class="col-md-2">
+        <input type="text" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Search..." />
+    </div>
+    <div class="col-md-2">
+        <select name="status" class="form-select">
+            <option value="">All statuses</option>
+            @foreach (AppointmentStatus statusOption in Enum.GetValues(typeof(AppointmentStatus)))
+            {
+                if (Model.Status == statusOption)
+                {
+                    <option value="@statusOption" selected>@statusOption</option>
+                }
+                else
+                {
+                    <option value="@statusOption">@statusOption</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="universityId" class="form-select">
+            <option value="">All universities</option>
+            @foreach (var university in Model.Universities)
+            {
+                if (Model.UniversityId == university.UniversityId)
+                {
+                    <option value="@university.UniversityId" selected>@university.UniversityName</option>
+                }
+                else
+                {
+                    <option value="@university.UniversityId">@university.UniversityName</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="companyId" class="form-select">
+            <option value="">All companies</option>
+            @foreach (var company in Model.Companies)
+            {
+                if (Model.CompanyId == company.CompanyId)
+                {
+                    <option value="@company.CompanyId" selected>@company.CompanyName</option>
+                }
+                else
+                {
+                    <option value="@company.CompanyId">@company.CompanyName</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-auto"><button type="submit" class="btn btn-outline-secondary">Filter</button></div>
+    <div class="col-auto"><a asp-action="Index" class="btn btn-link">Clear</a></div>
+</form>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (Model.Appointments.Count == 0)
+        {
+            <p class="text-muted p-3 mb-0">No appointments found.</p>
+        }
+        else
+        {
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>University</th>
+                        <th>Company</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Employees</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appointment in Model.Appointments)
+                    {
+                        <tr>
+                            <td>@appointment.AppointmentReference</td>
+                            <td>@appointment.University?.UniversityName</td>
+                            <td>@appointment.Company?.CompanyName</td>
+                            <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                            <td>@appointment.StartTime.ToString("hh:mm tt")</td>
+                            <td>@appointment.AppointmentEmployees.Count</td>
+                            <td><partial name="_StatusBadge" model="appointment.Status" /></td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@appointment.AppointmentId">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
