@@ -397,6 +397,12 @@ body {
     animation-delay: 0.12s;
 }
 
+.sample-login-actions .sample-login-btn.active {
+    background-color: var(--brand-dark-blue);
+    border-color: var(--brand-dark-blue);
+    color: var(--brand-white);
+}
+
 /* ---------------- Hero + dental logo ---------------- */
 .dentlink-hero {
     position: relative;

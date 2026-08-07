@@ -82,25 +82,43 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Lightweight health endpoint for Render (must return 200 before migrate finishes).
+app.MapGet("/healthz", () => Results.Ok("ok"));
+
 // ---------------------------------------------------------------------------
-// Create the database (if missing) and apply any pending EF Core migrations,
-// then seed sample data. This runs once each time the application starts.
+// Migrate/seed AFTER the server is listening so Render health checks pass.
+// Retries handle free-tier Postgres cold starts; do not crash the process.
 // ---------------------------------------------------------------------------
-using (var scope = app.Services.CreateScope())
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+app.Lifetime.ApplicationStarted.Register(() =>
 {
-    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
-    try
+    _ = Task.Run(async () =>
     {
+        using var scope = scopeFactory.CreateScope();
+        var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        context.Database.Migrate();
-        await DbSeeder.SeedAsync(context, scope.ServiceProvider.GetRequiredService<IPasswordHasher>());
-        logger.LogInformation("Database migrated and seeded successfully.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Database migration/seed failed.");
-        throw;
-    }
-}
+        var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+
+        for (var attempt = 1; attempt <= 8; attempt++)
+        {
+            try
+            {
+                await context.Database.MigrateAsync();
+                await DbSeeder.SeedAsync(context, hasher);
+                logger.LogInformation("Database migrated and seeded successfully.");
+                return;
+            }
+            catch (Exception ex) when (attempt < 8)
+            {
+                logger.LogWarning(ex, "Database migration/seed attempt {Attempt}/8 failed; retrying.", attempt);
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Database migration/seed failed after retries.");
+            }
+        }
+    });
+});
 
 app.Run();
